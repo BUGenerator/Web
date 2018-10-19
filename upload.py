@@ -18,20 +18,20 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
-@app.route('/', methods=['GET'], strict_slashes=False)
+@app.route('/', methods=['get'], strict_slashes=False)
 def indexpage():
-    return render_template('upload.html')
+    return render_template('index.html')
 
 
 # upload
-@app.route('/', methods=['POST'], strict_slashes=False)
+@app.route('/upload', methods=['post'], strict_slashes=False)
 def api_upload():
-    file_dir = os.path.join(basedir, app.config['UPLOAD_FOLDER'])
+    file_dir = os.path.join(basedir, 'static', app.config['UPLOAD_FOLDER'])
     if not os.path.exists(file_dir):
         os.makedirs(file_dir)
-    f = request.files['file']
+    f = request.files['uploadfile']
 
-    if f and allowed_file(f.filename): # if type is allowed
+    if f and allowed_file(f.filename):  # if type is allowed
         fname = secure_filename(f.filename)
         print(fname)
         f.save(os.path.join(file_dir, fname))
