@@ -7,6 +7,7 @@ import os
 import base64
 
 app = Flask(__name__)
+application = app
 UPLOAD_FOLDER = 'upload'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 basedir = os.path.abspath(os.path.dirname(__file__))
