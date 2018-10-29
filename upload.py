@@ -6,7 +6,7 @@ import os
 
 app = Flask(__name__)
 application = app
-UPLOAD_FOLDER = '/Users/xinyueli/Desktop/WebLearning/static/upload'
+UPLOAD_FOLDER = '/Users/xinyueli/Desktop/Web/static/upload'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # basedir = os.path.abspath(os.path.dirname(__file__))
 ALLOWED_EXTENSIONS = set(['jpg', 'png', 'jpeg'])
