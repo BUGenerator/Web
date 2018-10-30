@@ -6,10 +6,15 @@ import os
 
 app = Flask(__name__)
 application = app
-UPLOAD_FOLDER = '/Users/xinyueli/Desktop/Web/static/upload'
+basedir = os.path.dirname(__file__)
+UPLOAD_FOLDER = os.path.join(basedir, 'static', 'upload')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-# basedir = os.path.abspath(os.path.dirname(__file__))
 ALLOWED_EXTENSIONS = set(['jpg', 'png', 'jpeg'])
+
+
+@app.route('/', methods=['GET'], strict_slashes=False)
+def index():
+    return render_template('index.html')
 
 
 # allowed file type (
@@ -20,8 +25,9 @@ def allowed_file(filename):
 @app.route('/', methods=['GET', 'POST'], strict_slashes=False)
 def upload_file():
     # file_dir = os.path.join(basedir, 'static', app.config['UPLOAD_FOLDER'])
-    # if not os.path.exists(file_dir):
-    #     os.makedirs(file_dir)
+    if not os.path.exists(UPLOAD_FOLDER):
+        os.makedirs(UPLOAD_FOLDER)
+
     if request.method == 'POST':
         try:
             file = request.files['file']
@@ -29,13 +35,16 @@ def upload_file():
             return render_template('upload_error.html')
             # return jsonify({"error": 1001, "errmsg": u"failed"})
         if file and allowed_file(file.filename):
+            # basepath = os.path.dirname(__file__)  # the path of current file
+            # upload_path = os.path.join(file_dir, secure_filename(file.filename))
             filename = secure_filename(file.filename)
+            # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return redirect(url_for('uploaded_file', filename=filename))
         else:
             return render_template('upload_error.html')
             # return jsonify({"error": 1001, "errmsg": u"failed"})
-    return render_template('index.html')
+        # return render_template('index.html')
 
 
 @app.route('/show/<filename>')
