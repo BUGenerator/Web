@@ -8,7 +8,6 @@ app = Flask(__name__)
 application = app
 basedir = os.path.dirname(__file__)
 UPLOAD_FOLDER = os.path.join(basedir, 'static', 'upload')
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = set(['jpg', 'png', 'jpeg'])
 
 
@@ -39,7 +38,7 @@ def upload_file():
             # upload_path = os.path.join(file_dir, secure_filename(file.filename))
             filename = secure_filename(file.filename)
             # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            file.save(os.path.join(UPLOAD_FOLDER, filename))
             return redirect(url_for('uploaded_file', filename=filename))
         else:
             return render_template('upload_error.html')
