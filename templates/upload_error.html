@@ -1,0 +1,15 @@
+{% extends "index.html" %}
+{% block error %}
+    <div id="uploadAlert" class="alert alert-warning">
+        <a href="#" class="close" data-dismiss="alert">&times;</a>
+        <strong>WARNING!</strong> There is NO FILE!
+    </div>
+
+    <script>
+        $(function(){
+        $(".close").click(function(){
+            $("#uploadAlert").alert();
+            });
+        });
+    </script>
+{% endblock %}
