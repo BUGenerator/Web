@@ -8,7 +8,6 @@ app = Flask(__name__)
 application = app
 basedir = os.path.dirname(__file__)
 UPLOAD_FOLDER = os.path.join(basedir, 'static', 'upload')
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 ALLOWED_EXTENSIONS = set(['jpg', 'png', 'jpeg'])
 
 
