@@ -85,7 +85,7 @@ def prepare_env():
     # Clean upload
     # os.system("rm -rf ./static/upload/*")
     import subprocess
-    subprocess.Popen('curl -s https://api.github.com/repos/BUGenerator/Model/releases/latest | grep "browser_download_url.*model_fullres_keras.h5" | cut -d '"' -f 4 | wget -qi -')
+    subprocess.Popen('curl -s https://api.github.com/repos/BUGenerator/Model/releases/latest | grep "browser_download_url.*model_fullres_keras.h5" | cut -d \'"\' -f 4 | wget -qi -')
     if os.environ.get('AWS_PATH'):
         os.system("chmod 644 model_fullres_keras.h5")
         os.system("chown wsgi:wsgi model_fullres_keras.h5")
