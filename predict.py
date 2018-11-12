@@ -1,4 +1,5 @@
 from skimage.io import imread, imsave
+from skimage.color import gray2rgb
 import numpy as np
 from keras import models
 from skimage.morphology import binary_opening, disk, label
@@ -39,7 +40,8 @@ def predict_by_path(img_path):
     return seg, img
 
 def save_by_path(img, path):
-    return imsave(path, img)
+    rgb = gray2rgb(img)
+    return imsave(path, rgb)
 
 def extract_seg(seg):
     labels = label(seg)
