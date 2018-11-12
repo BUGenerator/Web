@@ -50,7 +50,7 @@ def post_upload():
         with open(os.path.join(UPLOAD_FOLDER, 'result', filename+'.json'), 'w') as file_handle:
             file_handle.write(output_data)
 
-        return redirect(url_for('uploaded_file', filename=filename))
+        return redirect(url_for('get_show', filename=filename))
     else:
         return render_template('upload_error.html')
 
