@@ -70,13 +70,13 @@ def get_show(filename):
     return render_template('upload.html', filename=filename, output_text=output_text)
 
 
-@app.route('/upload/<filename>')
-def get_upload(filename):
+@app.route('/uploaded/<filename>')
+def get_img_uploaded(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
 
 
 @app.route('/predict/<filename>')
-def get_predict(filename):
+def get_img_predict(filename):
     return send_from_directory(os.path.join(UPLOAD_FOLDER, 'result'), filename)
 
 def prepare_env():
