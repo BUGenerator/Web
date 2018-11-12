@@ -46,7 +46,7 @@ def upload_file():
             temp_path = os.path.join(UPLOAD_FOLDER, 'result', filename)
             predict.save_by_path(seg, temp_path)
 
-            return redirect(url_for('uploaded_file', filename=filename))
+            return redirect(url_for('uploaded_file', filename=filename, output_text=""))
         else:
             return render_template('upload_error.html')
             # return jsonify({"error": 1001, "errmsg": u"failed"})
@@ -72,7 +72,7 @@ def predict_img(filename):
     if not os.path.isfile(path):
         abort(404)
 
-    file_handle = open(temp_path, 'r')
+    file_handle = open(path, 'r')
     return send_file(file_handle)
 
 def prepare_env():
