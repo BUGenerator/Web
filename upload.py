@@ -1,7 +1,7 @@
 # encoding:utf8
 
 from werkzeug.utils import secure_filename
-from flask import Flask, render_template, request, send_from_directory, url_for, redirect, jsonify
+from flask import Flask, render_template, request, send_from_directory, url_for, redirect, jsonify, abort
 import os
 import predict
 import tempfile
@@ -50,6 +50,8 @@ def upload_file():
 
 @app.route('/show/<filename>')
 def uploaded_file(filename):
+    if not os.path.isfile(os.path.join(UPLOAD_FOLDER, filename)):
+        abort(404)
     # filename = 'http://127.0.0.1:5000/upload/' + filename
     return render_template('upload.html', filename=filename)
 
@@ -62,6 +64,8 @@ def send_file(filename):
 @app.route('/predict/<filename>')
 def predict_img(filename):
     path = os.path.join(UPLOAD_FOLDER, filename)
+    if not os.path.isfile(path):
+        abort(404)
     seg, _ = predict.predict_by_path(path)
     temp_path = os.path.join(tempfile.gettempdir(), "shipdetection-"+filename)
     predict.save_by_path(seg, temp_path)
