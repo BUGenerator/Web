@@ -29,7 +29,7 @@
                             <span style="font-size: 24px">Result Image</span>
                         </div>
                         <div class="chart-stage">
-                            <img class="image-responsive img-thumbnail" src="holder.js/720x480">
+                            <img class="image-responsive img-thumbnail" src="{{ url_for('predict_img', filename=filename) }}">
                         </div>
                     </div>
                 </div>

@@ -3,6 +3,8 @@
 from werkzeug.utils import secure_filename
 from flask import Flask, render_template, request, send_from_directory, url_for, redirect, jsonify
 import os
+import predict
+import tempfile
 
 app = Flask(__name__)
 application = app
@@ -55,6 +57,25 @@ def uploaded_file(filename):
 @app.route('/upload/<filename>')
 def send_file(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
+
+
+@app.route('/predict/<filename>')
+def predict_img(filename):
+    path = os.path.join(UPLOAD_FOLDER, filename)
+    seg, _ = predict.predict_by_path(path)
+    temp_path = os.path.join(tempfile.gettempdir(), "shipdetection-"+filename)
+    predict.save_by_path(seg, temp_path)
+
+    file_handle = open(temp_path, 'r')
+    @after_this_request
+    def remove_file(response):
+        try:
+            file_handle.close()
+            os.remove(temp_path)
+        except Exception as error:
+            app.logger.error("Error removing or closing downloaded file handle", error)
+        return response
+    return send_file(file_handle)
 
 
 if __name__ == '__main__':
