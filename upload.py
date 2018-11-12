@@ -1,7 +1,7 @@
 # encoding:utf8
 
 from werkzeug.utils import secure_filename
-from flask import Flask, render_template, request, send_from_directory, url_for, redirect, jsonify, abort
+from flask import Flask, render_template, request, send_file, send_from_directory, url_for, redirect, jsonify, abort
 import os
 import predict
 import tempfile
@@ -14,52 +14,49 @@ UPLOAD_FOLDER = os.path.join(basedir, 'static', 'upload')
 ALLOWED_EXTENSIONS = set(['jpg', 'png', 'jpeg'])
 
 
-@app.route('/', methods=['GET'], strict_slashes=False)
-def index():
-    return render_template('upload.html')
-
-
 # allowed file type (
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
+@app.route('/')
+@app.route('/upload', methods=['GET'], strict_slashes=False)
+def get_upload():
+    return render_template('upload.html')
 
-@app.route('/', methods=['GET', 'POST'], strict_slashes=False)
-def upload_file():
+
+@app.route('/upload', methods=['POST'], strict_slashes=False)
+def post_upload():
     # file_dir = os.path.join(basedir, 'static', app.config['UPLOAD_FOLDER'])
     if not os.path.exists(UPLOAD_FOLDER):
         os.makedirs(UPLOAD_FOLDER)
 
-    if request.method == 'POST':
-        try:
-            file = request.files['file']
-        except KeyError:
-            return render_template('upload_error.html')
-            # return jsonify({"error": 1001, "errmsg": u"failed"})
-        if file and allowed_file(file.filename):
-            # basepath = os.path.dirname(__file__)  # the path of current file
-            # upload_path = os.path.join(file_dir, secure_filename(file.filename))
-            filename = secure_filename(file.filename)
-            path = os.path.join(UPLOAD_FOLDER, filename)
-            file.save(path)
+    try:
+        file = request.files['file']
+    except KeyError:
+        return render_template('upload_error.html')
+        # return jsonify({"error": 1001, "errmsg": u"failed"})
+    if file and allowed_file(file.filename):
+        # basepath = os.path.dirname(__file__)  # the path of current file
+        # upload_path = os.path.join(file_dir, secure_filename(file.filename))
+        filename = secure_filename(file.filename)
+        path = os.path.join(UPLOAD_FOLDER, filename)
+        file.save(path)
 
-            seg, _ = predict.predict_by_path(path)
-            temp_path = os.path.join(UPLOAD_FOLDER, 'result', filename)
-            predict.save_by_path(seg, temp_path)
+        seg, _ = predict.predict_by_path(path)
+        temp_path = os.path.join(UPLOAD_FOLDER, 'result', filename)
+        predict.save_by_path(seg, temp_path)
 
-            output_data = json.dumps(predict.extract_seg(seg))
-            with open(os.path.join(UPLOAD_FOLDER, 'result', filename+'.json'), 'w') as file_handle:
-                file_handle.write(output_data)
+        output_data = json.dumps(predict.extract_seg(seg))
+        with open(os.path.join(UPLOAD_FOLDER, 'result', filename+'.json'), 'w') as file_handle:
+            file_handle.write(output_data)
 
-            return redirect(url_for('uploaded_file', filename=filename))
-        else:
-            return render_template('upload_error.html')
-            # return jsonify({"error": 1001, "errmsg": u"failed"})
-        # return render_template('index.html')
+        return redirect(url_for('uploaded_file', filename=filename))
+    else:
+        return render_template('upload_error.html')
 
 
 @app.route('/show/<filename>')
-def uploaded_file(filename):
+def get_show(filename):
     if not os.path.isfile(os.path.join(UPLOAD_FOLDER, filename)):
         abort(404)
     # filename = 'http://127.0.0.1:5000/upload/' + filename
@@ -74,17 +71,13 @@ def uploaded_file(filename):
 
 
 @app.route('/upload/<filename>')
-def send_file(filename):
+def get_upload(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
 
 
 @app.route('/predict/<filename>')
-def predict_img(filename):
-    path = os.path.join(UPLOAD_FOLDER, 'result', filename)
-    if not os.path.isfile(path):
-        abort(404)
-
-    return send_file(path)
+def get_predict(filename):
+    return send_from_directory(os.path.join(UPLOAD_FOLDER, 'result'), filename)
 
 def prepare_env():
     # Clean upload
