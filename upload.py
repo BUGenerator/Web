@@ -13,7 +13,7 @@ ALLOWED_EXTENSIONS = set(['jpg', 'png', 'jpeg'])
 
 @app.route('/', methods=['GET'], strict_slashes=False)
 def index():
-    return render_template('index.html')
+    return render_template('upload.html')
 
 
 # allowed file type (
