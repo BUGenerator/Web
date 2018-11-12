@@ -84,8 +84,7 @@ def predict_img(filename):
     if not os.path.isfile(path):
         abort(404)
 
-    file_handle = open(path, 'r')
-    return send_file(file_handle)
+    return send_file(path)
 
 def prepare_env():
     # Clean upload
