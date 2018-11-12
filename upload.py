@@ -83,6 +83,7 @@ def prepare_env():
     #if os.environ.get('AWS_PATH'):
     #    os.system("chmod 644 model_fullres_keras.h5")
     #    os.system("chown wsgi:wsgi model_fullres_keras.h5")
+    pass
 
 if __name__ == '__main__':
     prepare_env()
