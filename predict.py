@@ -2,6 +2,7 @@ from skimage.io import imread, imsave
 import numpy as np
 from keras import models
 from skimage.morphology import binary_opening, disk
+import os.environ
 
 fullres_model = models.load_model("model_fullres_keras.h5")
 if os.environ.get('SHIPDETECTION_BROKEN_MODEL'):
