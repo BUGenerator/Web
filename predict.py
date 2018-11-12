@@ -1,4 +1,4 @@
-from skimage.io import imread
+from skimage.io import imread, imsave
 import numpy as np
 from keras import models
 from skimage.morphology import binary_opening, disk
@@ -20,7 +20,11 @@ def predict_by_path(img_path):
     return seg, img
 
 def save_by_path(img, path):
-    return skimage.io.imsave(path, seg)
+    return imsave(path, seg)
+
+def extract_seg(seg):
+    l = []
+    return l
 
 # seg, img = predict_by_path("")
 
