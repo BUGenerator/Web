@@ -36,6 +36,7 @@ def smooth(seg):
 def predict_by_path(img_path):
     img = imread(img_path)
     seg, img = _raw_prediction(img)
+    seg = seg[:, :, 0]
     # return smooth(cur_seg), c_img
     return seg, img
 
