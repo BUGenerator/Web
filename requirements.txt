@@ -1,1 +1,7 @@
 flask
+# prediction
+keras
+numpy
+scipy
+tensorflow
+scikit-image

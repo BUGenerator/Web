@@ -4,7 +4,7 @@
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     <div class="row">
         <div class="col-sm-6 placeholder" style="padding-top: 40px">
-            <form class="form-inline" role="form" action="" method="post" enctype="multipart/form-data">
+            <form class="form-inline" role="form" action="/upload" method="post" enctype="multipart/form-data">
                 <span style="font-size: 20px; padding-left: 10px">Input</span>
                 <div class="form-group" style="padding-left: 10px">
                     <input type="file" name="file">
@@ -21,15 +21,19 @@
     <div class="row">
         <div class="col-sm-6 placeholder" style="padding-top: 10px">
             {% if filename %}
-            <img class="image-responsive img-thumbnail" src="{{ url_for('send_file', filename=filename) }}">
+            <img class="image-responsive img-thumbnail" src="{{ url_for('get_img_uploaded', filename=filename) }}">
             {% else %}
             <img class="image-responsive img-thumbnail" src="{{ url_for('static', filename='image/input-holder.png') }}">
             {% endif %}
             <span class="text-muted">Input Information</span>
         </div>
         <div class="col-sm-6 placeholder" style="padding-top: 10px">
-            <img class="image-responsive img-thumbnail" src="{{ url_for('static', filename='image/output-holder.png') }}">
-            <span class="text-muted">Output Information</span>
+            {% if filename %}
+            <img class="image-responsive img-thumbnail" src="{{ url_for('get_img_predict', filename=filename) }}">
+            {% else %}
+            <img class="image-responsive img-thumbnail" src="{{ url_for('static', filename='image/input-holder.png') }}">
+            {% endif %}
+            <span class="text-muted">{{ output_text }}</span>
         </div>
     </div>
 </div>
