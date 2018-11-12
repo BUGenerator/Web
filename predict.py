@@ -53,7 +53,7 @@ def extract_seg(seg):
     for i in segs:
         pass
 
-    return segs
+    return len(segs)
 
 # seg, img = predict_by_path("")
 

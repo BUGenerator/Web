@@ -5,6 +5,7 @@ from flask import Flask, render_template, request, send_from_directory, url_for,
 import os
 import predict
 import tempfile
+import json
 
 app = Flask(__name__)
 application = app
@@ -46,7 +47,11 @@ def upload_file():
             temp_path = os.path.join(UPLOAD_FOLDER, 'result', filename)
             predict.save_by_path(seg, temp_path)
 
-            return redirect(url_for('uploaded_file', filename=filename, output_text=""))
+            output_data = json.dumps(predict.extract_seg(seg))
+            with open(os.path.join(UPLOAD_FOLDER, 'result', filename+'.json'), 'w') as file_handle:
+                file_handle.write(output_data)
+
+            return redirect(url_for('uploaded_file', filename=filename))
         else:
             return render_template('upload_error.html')
             # return jsonify({"error": 1001, "errmsg": u"failed"})
@@ -58,7 +63,14 @@ def uploaded_file(filename):
     if not os.path.isfile(os.path.join(UPLOAD_FOLDER, filename)):
         abort(404)
     # filename = 'http://127.0.0.1:5000/upload/' + filename
-    return render_template('upload.html', filename=filename)
+
+    output_text = ""
+    output_path = os.path.join(UPLOAD_FOLDER, 'result', filename+'.json')
+    if os.path.isfile(output_path):
+        with open(output_path, 'r') as file_handle:
+            output_text = file_handle.read()
+
+    return render_template('upload.html', filename=filename, output_text=output_text)
 
 
 @app.route('/upload/<filename>')
