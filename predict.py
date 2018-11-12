@@ -46,7 +46,7 @@ def save_by_path(img, path):
 
 def extract_seg(seg):
     labels = label(seg)
-    if img.ndim > 2:
+    if seg.ndim > 2:
         segs = [np.sum(labels==k, axis=2) for k in np.unique(labels[labels>0])]
     else:
         segs = [labels==k for k in np.unique(labels[labels>0])]
