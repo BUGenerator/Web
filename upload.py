@@ -39,8 +39,13 @@ def upload_file():
             # basepath = os.path.dirname(__file__)  # the path of current file
             # upload_path = os.path.join(file_dir, secure_filename(file.filename))
             filename = secure_filename(file.filename)
-            # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            file.save(os.path.join(UPLOAD_FOLDER, filename))
+            path = os.path.join(UPLOAD_FOLDER, filename)
+            file.save(path)
+
+            seg, _ = predict.predict_by_path(path)
+            temp_path = os.path.join(UPLOAD_FOLDER, 'result', filename)
+            predict.save_by_path(seg, temp_path)
+
             return redirect(url_for('uploaded_file', filename=filename))
         else:
             return render_template('upload_error.html')
@@ -63,32 +68,21 @@ def send_file(filename):
 
 @app.route('/predict/<filename>')
 def predict_img(filename):
-    path = os.path.join(UPLOAD_FOLDER, filename)
+    path = os.path.join(UPLOAD_FOLDER, 'result', filename)
     if not os.path.isfile(path):
         abort(404)
-    seg, _ = predict.predict_by_path(path)
-    temp_path = os.path.join(tempfile.gettempdir(), "shipdetection-"+filename)
-    predict.save_by_path(seg, temp_path)
 
     file_handle = open(temp_path, 'r')
-    @after_this_request
-    def remove_file(response):
-        try:
-            file_handle.close()
-            os.remove(temp_path)
-        except Exception as error:
-            app.logger.error("Error removing or closing downloaded file handle", error)
-        return response
     return send_file(file_handle)
 
 def prepare_env():
     # Clean upload
     # os.system("rm -rf ./static/upload/*")
-    import subprocess
-    subprocess.Popen('curl -s https://api.github.com/repos/BUGenerator/Model/releases/latest | grep "browser_download_url.*model_fullres_keras.h5" | cut -d \'"\' -f 4 | wget -qi -', shell=True)
-    if os.environ.get('AWS_PATH'):
-        os.system("chmod 644 model_fullres_keras.h5")
-        os.system("chown wsgi:wsgi model_fullres_keras.h5")
+    #import subprocess
+    #subprocess.Popen(['curl -s https://api.github.com/repos/BUGenerator/Model/releases/latest | grep "browser_download_url.*model_fullres_keras.h5" | cut -d \'"\' -f 4 | wget -qi -'], shell=True)
+    #if os.environ.get('AWS_PATH'):
+    #    os.system("chmod 644 model_fullres_keras.h5")
+    #    os.system("chown wsgi:wsgi model_fullres_keras.h5")
 
 if __name__ == '__main__':
     prepare_env()
