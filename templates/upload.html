@@ -54,7 +54,7 @@ function toggle_bounding(){
                 height = Math.round(height*100000)/1000;
                 left = Math.round(left*100000)/1000;
                 width = Math.round(width*100000)/1000;
-                innerHTML += '<div class="bbox" style="top: '+top+'%;left: '+left+'%;height: '+height+'%;width: '+width+'%;border: 2px solid red; position: absolute;"></div>';
+                innerHTML += '<div class="bbox" style="top: '+top+'%;left: '+left+'%;height: '+height+'%;width: '+width+'%;"></div>';
             }
         }
         bboxes.innerHTML = innerHTML;
@@ -64,6 +64,7 @@ document.getElementById("toggle_bounding").addEventListener("click", toggle_boun
 toggle_bounding();
 </script>
 <style>
+.bbox{border: 2px solid red; position: absolute;}
 .bbox:hover{border-color: blue;}
 </style>
 {% endblock %}
