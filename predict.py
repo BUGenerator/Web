@@ -45,7 +45,7 @@ def predict_by_path(img_path):
     return seg, img
 
 def save_by_path(seg, path):
-    return Image.fromarray(seg, mode='L').save(path)
+    return Image.fromarray(seg, mode='L').convert(mode="RGB").save(path)
 
 def extract_seg(seg):
     labels = label(seg)
