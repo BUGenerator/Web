@@ -3,6 +3,7 @@ from skimage.color import gray2rgb
 import numpy as np
 from keras import models
 from skimage.morphology import binary_opening, disk, label
+from skimage.measure import regionprops
 import os
 
 fullres_model = None
@@ -46,15 +47,11 @@ def save_by_path(img, path):
 
 def extract_seg(seg):
     labels = label(seg)
-    if seg.ndim > 2:
-        segs = [np.sum(labels==k, axis=2) for k in np.unique(labels[labels>0])]
-    else:
-        segs = [labels==k for k in np.unique(labels[labels>0])]
+    regions = [region.bbox for region in regionprops(labels)]
 
-    for i in segs:
-        pass
+    # bbox: (min_row, min_col, max_row, max_col)
 
-    return len(segs)
+    return {'regions': regions, 'size': [768, 768]}
 
 # seg, img = predict_by_path("")
 
