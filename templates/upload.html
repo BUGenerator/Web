@@ -21,8 +21,7 @@
     <div class="row">
         <div class="col-sm-6 placeholder" style="padding-top: 10px">
             {% if filename %}
-            <div id="original_img_div" style="position: relative;"><img class="image-responsive img-thumbnail" src="/uploaded/0abe18731.jpg"><div id="original_img_bboxes" style="margin: 4px;position: absolute;top: 0;bottom: 0;left: 0;right: 0;"></div></div>
-            <img class="image-responsive img-thumbnail" id="original_img" src="{{ url_for('get_img_uploaded', filename=filename) }}">
+            <div id="original_img_div" style="position: relative;"><img class="image-responsive img-thumbnail" src="{{ url_for('get_img_uploaded', filename=filename) }}"><div id="original_img_bboxes" style="margin: 4px;position: absolute;top: 0;bottom: 0;left: 0;right: 0;"></div></div>
             {% else %}
             <img class="image-responsive img-thumbnail" src="{{ url_for('static', filename='image/input-holder.png') }}">
             {% endif %}
@@ -61,5 +60,10 @@ function toggle_bounding(){
         bboxes.innerHTML = innerHTML;
     }
 }
+document.getElementById("toggle_bounding").addEventListener("click", toggle_bounding);
+toggle_bounding();
 </script>
+<style>
+.bbox:hover{border-color: blue;}
+</style>
 {% endblock %}
