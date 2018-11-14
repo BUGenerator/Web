@@ -45,7 +45,7 @@ def predict_by_path(img_path):
     return seg, img
 
 def save_by_path(seg, path):
-    seg = (seg != 0).astype('int8')
+    seg = seg*255
     # Increase contrast
     return Image.fromarray(seg, mode='L').convert(mode="RGB").save(path)
 
