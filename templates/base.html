@@ -19,6 +19,8 @@
             <div class="row">
                 {% include "common/sidebar.html" %}
 {#                {% include "upload.html" %}#}
+                {% block error %}
+                {% endblock %}
                 {% block upload %}
                 {% endblock %}
             </div>
