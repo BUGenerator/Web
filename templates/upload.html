@@ -21,7 +21,7 @@
     <div class="row">
         <div class="col-sm-6 placeholder" style="padding-top: 10px">
             {% if filename %}
-            <div id="original_img_div" style="position: relative;"><img class="image-responsive img-thumbnail" src="{{ url_for('get_img_uploaded', filename=filename) }}"><div id="original_img_bboxes" style="margin: 4px;position: absolute;top: 0;bottom: 0;left: 0;right: 0;"></div></div>
+            <div id="original_img_div" style="position: relative;"><img class="image-responsive img-thumbnail" src="{{ url_for('get_img_uploaded', filename=filename) }}" id="original_img"><div id="original_img_bboxes" style="margin: 4px;position: absolute;top: 0;bottom: 0;left: 0;right: 0;"></div></div>
             {% else %}
             <img class="image-responsive img-thumbnail" src="{{ url_for('static', filename='image/input-holder.png') }}">
             {% endif %}
@@ -43,7 +43,7 @@
 var output_json = {{ output_json | safe}};
 function toggle_bounding(){
     var tb = document.getElementById("toggle_bounding"), oi = document.getElementById("original_img"), bboxes = document.getElementById("original_img_bboxes");
-    if(output_json && output_json['regions'] && oi && bboxes){
+    if(output_json && output_json['regions'] && bboxes){
         var size = output_json['size'];
         var innerHTML = "";
         if(tb && tb.checked){
