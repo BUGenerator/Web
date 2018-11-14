@@ -52,7 +52,7 @@ def extract_seg(seg):
 
     # bbox: (min_row, min_col, max_row, max_col)
 
-    return {'regions': regions, 'size': [768, 768], 'regions_original': regions_original}
+    return {'regions': regions, 'size': [768, 768], 'regions_original': [region.__dict__ for region in regions_original]}
 
 # seg, img = predict_by_path("")
 
