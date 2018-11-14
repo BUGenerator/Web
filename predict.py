@@ -48,11 +48,11 @@ def save_by_path(img, path):
 def extract_seg(seg):
     labels = label(seg)
     regions_original = regionprops(labels)
-    regions = [region.bbox for region in regions_original if region.area > 10]
+    regions = [region.bbox for region in regions_original if region.area > 100]
 
     # bbox: (min_row, min_col, max_row, max_col)
 
-    return {'regions': regions, 'size': [768, 768], 'regions_original': [region.__dict__ for region in regions_original]}
+    return {'regions': regions, 'size': [768, 768]}
 
 # seg, img = predict_by_path("")
 
