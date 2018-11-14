@@ -1,8 +1,8 @@
-from skimage.io import imread, imsave
-from skimage.color import gray2rgb, rgba2rgb
+from skimage.io import imsave
+from skimage.color import gray2rgb
 import numpy as np
 from keras import models
-from keras.preprocessing import load_img
+from keras.preprocessing.image import load_img
 from skimage.morphology import binary_opening, disk, label
 from skimage.measure import regionprops
 import os
@@ -38,14 +38,15 @@ def smooth(seg):
 
 def predict_by_path(img_path):
     img = load_img(img_path, target_size=MODEL_IMG_SIZE)
-    # load_img take care of RGBA images by itself
+    # load_img take care of RGBA images by itself;
+    # it might have issue in https://stackoverflow.com/q/9166400/4073795
     seg, img = _raw_prediction(img)
     seg = seg[:, :, 0]
     # return smooth(cur_seg), c_img
     return seg, img
 
-def save_by_path(img, path):
-    rgb = gray2rgb(img)
+def save_by_path(seg, path):
+    rgb = gray2rgb(seg)
     return imsave(path, rgb)
 
 def extract_seg(seg):
