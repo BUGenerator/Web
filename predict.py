@@ -2,11 +2,13 @@ from skimage.io import imread, imsave
 from skimage.color import gray2rgb, rgba2rgb
 import numpy as np
 from keras import models
+from keras.preprocessing import load_img
 from skimage.morphology import binary_opening, disk, label
 from skimage.measure import regionprops
 import os
 
 fullres_model = None
+MODEL_IMG_SIZE = (768, 768)
 
 def load_model():
     global fullres_model
@@ -35,9 +37,8 @@ def smooth(seg):
     return binary_opening(seg>0.99, np.expand_dims(disk(2), -1))
 
 def predict_by_path(img_path):
-    img = imread(img_path)
-    if img.shape[2] == 4:
-        img = rgba2rgb(img)
+    img = load_img(img_path, target_size=MODEL_IMG_SIZE)
+    # load_img take care of RGBA images by itself
     seg, img = _raw_prediction(img)
     seg = seg[:, :, 0]
     # return smooth(cur_seg), c_img
@@ -54,7 +55,7 @@ def extract_seg(seg):
 
     # bbox: (min_row, min_col, max_row, max_col)
 
-    return {'regions': regions, 'size': [768, 768]}
+    return {'regions': regions, 'size': MODEL_IMG_SIZE}
 
 # seg, img = predict_by_path("")
 
