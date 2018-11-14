@@ -21,11 +21,13 @@
     <div class="row">
         <div class="col-sm-6 placeholder" style="padding-top: 10px">
             {% if filename %}
-            <img class="image-responsive img-thumbnail" src="{{ url_for('get_img_uploaded', filename=filename) }}">
+            <div id="original_img_div" style="position: relative;"><img class="image-responsive img-thumbnail" src="{{ url_for('get_img_uploaded', filename=filename) }}" id="original_img"><div id="original_img_bboxes" style="margin: 4px;position: absolute;top: 0;bottom: 0;left: 0;right: 0;"></div></div>
             {% else %}
             <img class="image-responsive img-thumbnail" src="{{ url_for('static', filename='image/input-holder.png') }}">
             {% endif %}
-            <span class="text-muted">Input Information</span>
+            {% if output_json %}
+            <div class="text-muted"><label><input type="checkbox" id="toggle_bounding" name="toggle_bounding" checked> Toggle</label></div>
+            {% endif %}
         </div>
         <div class="col-sm-6 placeholder" style="padding-top: 10px">
             {% if filename %}
@@ -37,4 +39,32 @@
         </div>
     </div>
 </div>
+<script>
+var output_json = {{ output_json | safe}};
+function toggle_bounding(){
+    var tb = document.getElementById("toggle_bounding"), oi = document.getElementById("original_img"), bboxes = document.getElementById("original_img_bboxes");
+    if(output_json && output_json['regions'] && bboxes){
+        var size = output_json['size'];
+        var innerHTML = "";
+        if(tb && tb.checked){
+            for(var i in output_json['regions']){
+                var region = output_json['regions'][i];
+                var top = region[0]/size[0], height = (region[2]-region[0])/size[0], left = region[1]/size[1], width = (region[3]-region[1])/size[1];
+                top = Math.round(top*100000)/1000;
+                height = Math.round(height*100000)/1000;
+                left = Math.round(left*100000)/1000;
+                width = Math.round(width*100000)/1000;
+                innerHTML += '<div class="bbox" style="top: '+top+'%;left: '+left+'%;height: '+height+'%;width: '+width+'%;"></div>';
+            }
+        }
+        bboxes.innerHTML = innerHTML;
+    }
+}
+document.getElementById("toggle_bounding").addEventListener("click", toggle_bounding);
+toggle_bounding();
+</script>
+<style>
+.bbox{border: 2px solid red; position: absolute;}
+.bbox:hover{border-color: blue;}
+</style>
 {% endblock %}

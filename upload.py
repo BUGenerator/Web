@@ -67,7 +67,7 @@ def get_show(filename):
         with open(output_path, 'r') as file_handle:
             output_text = file_handle.read()
 
-    return render_template('upload.html', filename=filename, output_text=output_text)
+    return render_template('upload.html', filename=filename, output_text="", output_json=output_text)
 
 
 @app.route('/uploaded/<filename>')
