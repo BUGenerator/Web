@@ -1,50 +1,70 @@
 {% extends "base.html" %}
 
-{% block upload_menu %}
-    <form class="form-inline" role="form" action="" method="post" enctype="multipart/form-data">
-        <div class="form-group">
-            <input type="file" name="file">
+{% block upload %}
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <div class="row">
+        <div class="col-sm-6 placeholder" style="padding-top: 40px">
+            <form class="form-inline" role="form" action="/upload" method="post" enctype="multipart/form-data">
+                <span style="font-size: 20px">Input</span>
+                <div class="form-group" style="padding-left: 30px">
+                    <input type="file" name="file">
+                </div>
+                <div class="form-group" style="padding-left: 10px">
+                    <button type="submit" class="btn btn-sm btn-success">Upload</button>
+                </div>
+            </form>
         </div>
-        <button type="submit" class="btn btn-default">Upload</button>
-    </form>
+        <div class="col-sm-6 placeholder" style="padding-top: 40px">
+            <span style="font-size: 20px">Output</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 placeholder" style="padding-top: 10px">
+            {% if filename %}
+            <div id="original_img_div" style="position: relative;"><img class="image-responsive img-thumbnail" src="{{ url_for('get_img_uploaded', filename=filename) }}" id="original_img"><div id="original_img_bboxes" style="margin: 4px;position: absolute;top: 0;bottom: 0;left: 0;right: 0;"></div></div>
+            {% else %}
+            <img class="image-responsive img-thumbnail" src="{{ url_for('static', filename='image/input-holder.png') }}">
+            {% endif %}
+            {% if output_json %}
+            <div class="text-muted"><label><input type="checkbox" id="toggle_bounding" name="toggle_bounding" checked> Toggle</label></div>
+            {% endif %}
+        </div>
+        <div class="col-sm-6 placeholder" style="padding-top: 10px">
+            {% if filename %}
+            <img class="image-responsive img-thumbnail" src="{{ url_for('get_img_predict', filename=filename) }}">
+            {% else %}
+            <img class="image-responsive img-thumbnail" src="{{ url_for('static', filename='image/input-holder.png') }}">
+            {% endif %}
+            <span class="text-muted">{{ output_text }}</span>
+        </div>
+    </div>
+</div>
+<script>
+var output_json = {{ output_json | safe}};
+function toggle_bounding(){
+    var tb = document.getElementById("toggle_bounding"), oi = document.getElementById("original_img"), bboxes = document.getElementById("original_img_bboxes");
+    if(output_json && output_json['regions'] && bboxes){
+        var size = output_json['size'];
+        var innerHTML = "";
+        if(tb && tb.checked){
+            for(var i in output_json['regions']){
+                var region = output_json['regions'][i];
+                var top = region[0]/size[1], height = (region[2]-region[0])/size[1], left = region[1]/size[0], width = (region[3]-region[1])/size[0];
+                top = Math.round(top*100000)/1000;
+                height = Math.round(height*100000)/1000;
+                left = Math.round(left*100000)/1000;
+                width = Math.round(width*100000)/1000;
+                innerHTML += '<div class="bbox" style="top: '+top+'%;left: '+left+'%;height: '+height+'%;width: '+width+'%;"></div>';
+            }
+        }
+        bboxes.innerHTML = innerHTML;
+    }
+}
+document.getElementById("toggle_bounding").addEventListener("click", toggle_bounding);
+toggle_bounding();
+</script>
+<style>
+.bbox{border: 2px solid red; position: absolute;}
+.bbox:hover{border-color: blue;}
+</style>
 {% endblock %}
-
-{% if filename %}
-    {% block image_form %}
-        <div class="container-fluid">
-            <div class="row flex-nowrap">
-                <div class="col-sm-6">
-                    <div class="image-wrapper">
-                        <div class="image-title">
-                            <span style="font-size: 24px">Original Image</span>
-                        </div>
-                        <div class="chart-stage">
-                            <img class="image-responsive img-thumbnail" src="{{ url_for('send_file', filename=filename) }}">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="image-wrapper">
-                        <div class="image-title">
-                            <span style="font-size: 24px">Result Image</span>
-                        </div>
-                        <div class="chart-stage">
-                            <img class="image-responsive img-thumbnail" src="holder.js/720x480">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    {% endblock %}
-
-{% else %}
-    <h1>no image</h1>
-{% endif %}
-
-{#<!doctype html>#}
-{#<title>Hello from Flask</title>#}
-{#{% if filename %}#}
-{#  <h1>some text <img src="{{ url_for('send_file', filename=filename) }}">more text!</h1>#}
-{#{% else %}#}
-{#  <h1>no image for whatever reason</h1>#}
-{#{% endif %}#}
