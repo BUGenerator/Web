@@ -5,6 +5,7 @@ from PIL import Image
 from skimage.morphology import binary_opening, disk, label
 from skimage.measure import regionprops
 import os
+import colorsys
 
 fullres_model = None
 MODEL_IMG_SIZE = (768, 768)
@@ -38,16 +39,18 @@ def smooth(seg):
 def predict_by_path(img_path):
     img = load_img(img_path, target_size=MODEL_IMG_SIZE)
     # load_img take care of RGBA images by itself;
-    # it might have issue in https://stackoverflow.com/q/9166400/4073795
+    # it might have transparency issue like https://stackoverflow.com/q/9166400/4073795
     seg, img = _raw_prediction(img)
     seg = seg[:, :, 0]
     # return smooth(seg), img
     return seg, img
 
 def save_by_path(seg, path):
-    seg = (seg != 0).astype('int8')*255
+    seg = (seg != 0).astype('uint8')  # *255
     # Increase contrast
-    return Image.fromarray(seg, mode='L').convert(mode="RGB").save(path)
+    for x in np.nditer(a, op_flags=['readwrite']):
+        x = np.asarray(colorsys.hls_to_rgb(x, 0.5, 0.5))*255
+    return Image.fromarray(seg, mode='RGB').save(path)
 
 def extract_seg(seg):
     labels = label(seg)
