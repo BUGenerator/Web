@@ -48,7 +48,7 @@ def predict_by_path(img_path):
 def save_by_path(seg, path):
     seg = (seg != 0).astype('uint8')  # *255
     # Increase contrast
-    for x in np.nditer(a, op_flags=['readwrite']):
+    for x in np.nditer(seg, op_flags=['readwrite']):
         x = np.asarray(colorsys.hls_to_rgb(x, 0.5, 0.5))*255
     return Image.fromarray(seg, mode='RGB').save(path)
 
