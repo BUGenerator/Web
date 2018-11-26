@@ -5,7 +5,6 @@ from PIL import Image
 from skimage.morphology import binary_opening, disk, label
 from skimage.measure import regionprops
 import os
-import colorsys
 
 fullres_model = None
 MODEL_IMG_SIZE = (768, 768)
@@ -42,20 +41,17 @@ def predict_by_path(img_path):
     # it might have transparency issue like https://stackoverflow.com/q/9166400/4073795
     seg, img = _raw_prediction(img)
     seg = seg[:, :, 0]
-    # return smooth(seg), img
-    return seg, img
+    return smooth(seg), img
+    # return seg, img
 
 def save_by_path(seg, path):
-    seg = (seg != 0).astype('uint8')  # *255
-    # Increase contrast
-    for x in np.nditer(seg, op_flags=['readwrite']):
-        x = np.asarray(colorsys.hls_to_rgb(x, 0.5, 0.5))*255
-    return Image.fromarray(seg, mode='RGB').save(path)
+    seg = seg.astype('uint8')*255
+    return Image.fromarray(seg).convert("RGB").save(path)
 
 def extract_seg(seg):
     labels = label(seg)
     regions_original = regionprops(labels)
-    regions = [region.bbox for region in regions_original if region.area > 100]
+    regions = [region.bbox for region in regions_original if region.area > 500]
     # bbox: (min_row, min_col, max_row, max_col)
 
     return {'regions': regions, 'size': MODEL_IMG_SIZE}
