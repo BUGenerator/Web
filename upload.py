@@ -18,7 +18,12 @@ ALLOWED_EXTENSIONS = set(['jpg', 'png', 'jpeg'])
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
+
 @app.route('/')
+def get_index():
+    return render_template('index.html')
+
+
 @app.route('/upload', methods=['GET'], strict_slashes=False)
 def get_upload():
     return render_template('upload.html')
