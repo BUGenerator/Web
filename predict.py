@@ -33,7 +33,7 @@ def _raw_prediction(img):
     return seg, img[0]
 
 def smooth(seg):
-    return binary_opening(seg>0.99, np.expand_dims(disk(2), -1))
+    return binary_opening(seg>0.99, np.expand_dims(disk(2), -1)[:,:,0]).astype('uint8')
 
 def predict_by_path(img_path):
     img = load_img(img_path, target_size=MODEL_IMG_SIZE)
