@@ -26,7 +26,7 @@
                 <div id="original_img_bboxes" style="margin: 4px;position: absolute;top: 0;bottom: 0;left: 0;right: 0;"></div>
             </div>
             {% else %}
-            <img class="image-responsive img-thumbnail" src="{{ url_for('static', filename='image/input-holder.png') }}">
+            <img class="image-responsive img-thumbnail" src="{{ url_for('static', filename='image/input-holder.png') }}" style="width: 100%;">
             {% endif %}
             {% if output_json %}
             <div class="text-muted"><label><input type="checkbox" id="toggle_bounding" name="toggle_bounding" checked> Toggle</label></div>
