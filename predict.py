@@ -51,7 +51,7 @@ def save_by_path(seg, path):
 def extract_seg(seg):
     labels = label(seg)
     regions_original = regionprops(labels)
-    regions = [region.bbox for region in regions_original if region.area > 500]
+    regions = [region.bbox for region in regions_original if region.area > 100]
     # bbox: (min_row, min_col, max_row, max_col)
 
     return {'regions': regions, 'size': MODEL_IMG_SIZE}
