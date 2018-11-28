@@ -91,6 +91,7 @@ def get_img_uploaded(filename):
 def get_img_predict(filename):
     return send_from_directory(os.path.join(UPLOAD_FOLDER, 'result'), filename)
 
+
 @app.route('/demo-provision/<filename>')
 def get_demo_provision(filename):
     """
@@ -119,6 +120,12 @@ def get_demo_provision(filename):
                 return redirect(url_for('get_show', filename=filename))
     else:
         return redirect(url_for('get_upload'))
+
+@app.route('/BUGenerator_delete_all')
+def get_delete_all(filename):
+    # Clean upload
+    os.system("rm -rf ./static/upload/*")
+    return "OK"
 
 def prepare_env():
     # Clean upload
