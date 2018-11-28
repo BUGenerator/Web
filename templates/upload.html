@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block upload %}
+{% block content %}
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     <div class="row">
         <div class="col-sm-6 placeholder" style="padding-top: 20px; padding-left: 30px">
@@ -30,6 +30,7 @@
             {% endif %}
         </div>
     </div>
+</div>
 <script>
 var output_json = {{ output_json | safe}};
 function toggle_bounding(){
