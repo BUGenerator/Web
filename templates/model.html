@@ -1,1 +1,18 @@
 {% extends "base.html" %}
+
+{% block content %}
+<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+    <h2 style="font-size: 20px; padding-left: 10px; color: #428bca">About the model</h2>
+    <p>Since you are on this page, we will introduce the model we use for now.</p>
+    <p>We compared several models and chose U-Net model for now. U-Net is highly suitable for binary segmentation of images, which exactly matches our task: binary segmentation for whether pixels include a ship.</p>
+    <ul>
+        <li>Training set includes 231,724 satellite images.
+            <ul>
+                <li>For images in the training set, the ground truth EncodedPixels are provided in the train_ship_segmentations.csv file.</li>
+                <li>EncodedPixels is blank if there are no ships in the image.</li>
+            </ul>
+    </ul>
+    <p>Validation loss (Intersection over Union): -0.25026</p>
+    <p></p>
+</div>
+{% endblock %}

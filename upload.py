@@ -6,11 +6,13 @@ import os
 import predict
 import tempfile
 import json
+from shutil import copyfile
 
 app = Flask(__name__)
 application = app
 basedir = os.path.dirname(__file__)
 UPLOAD_FOLDER = os.path.join(basedir, 'static', 'upload')
+DEMO_FOLDER = os.path.join(basedir, 'static', 'image', 'demo')
 ALLOWED_EXTENSIONS = set(['jpg', 'png', 'jpeg'])
 
 
@@ -26,7 +28,7 @@ def get_index():
 
 @app.route('/model')
 def get_model():
-    return  render_template('model.html')
+    return render_template('model.html')
 
 
 @app.route('/upload', methods=['GET'], strict_slashes=False)
@@ -88,6 +90,42 @@ def get_img_uploaded(filename):
 @app.route('/predict/<filename>')
 def get_img_predict(filename):
     return send_from_directory(os.path.join(UPLOAD_FOLDER, 'result'), filename)
+
+
+@app.route('/demo-provision/<filename>')
+def get_demo_provision(filename):
+    """
+    One thing here: if there is error, pretend there is no error
+    """
+    if os.path.isfile(os.path.join(DEMO_FOLDER, filename)):
+        if os.path.isfile(os.path.join(UPLOAD_FOLDER, filename)):
+            # Already provisioned
+            return redirect(url_for('get_show', filename=filename))
+        else:
+            try:
+                path = os.path.join(UPLOAD_FOLDER, filename)
+                copyfile(os.path.join(DEMO_FOLDER, filename), path)
+                # Then do the prediction
+                seg, _ = predict.predict_by_path(path)
+                temp_path = os.path.join(UPLOAD_FOLDER, 'result', filename)
+                predict.save_by_path(seg, temp_path)
+
+                output_data = json.dumps(predict.extract_seg(seg))
+                with open(os.path.join(UPLOAD_FOLDER, 'result', filename+'.json'), 'w') as file_handle:
+                    file_handle.write(output_data)
+
+            except Exception:
+                return redirect(url_for('get_upload'))
+            else:
+                return redirect(url_for('get_show', filename=filename))
+    else:
+        return redirect(url_for('get_upload'))
+
+@app.route('/BUGenerator_delete_all')
+def get_delete_all(filename):
+    # Clean upload
+    os.system("rm -rf ./static/upload/*")
+    return "OK"
 
 def prepare_env():
     # Clean upload
