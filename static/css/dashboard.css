@@ -1,6 +1,27 @@
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
     padding-top: 50px;
+    font-family:  'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+}
+
+/* Navbar navigation */
+
+.navbar-inverse {
+    background-color: #428bca;
+}
+
+.navbar-inverse .navbar-brand {
+    color: #bfcfe7;
+    font-family:  'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+}
+
+.navbar-inverse .navbar-nav>li>a {
+    color: #bfcfe7;
+    font-family:  'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+}
+
+.nav-active {
+    background-color: #346899;
 }
 
 .navbar-fixed-top {
@@ -26,6 +47,8 @@ body {
   }
 }
 
+
+
 /* Sidebar navigation */
 .nav-sidebar {
     margin-right: -21px; /* 20px padding + 1px border */
@@ -35,6 +58,7 @@ body {
 .nav-sidebar > li > a {
     padding-right: 20px;
     padding-left: 20px;
+    font-family:  'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
 }
 .nav-sidebar > .active > a,
 .nav-sidebar > .active > a:hover,
@@ -42,4 +66,3 @@ body {
     color: #fff;
     background-color: #428bca;
 }
-
