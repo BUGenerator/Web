@@ -24,6 +24,11 @@ def get_index():
     return render_template('index.html')
 
 
+@app.route('/model')
+def get_model():
+    return  render_template('model.html')
+
+
 @app.route('/upload', methods=['GET'], strict_slashes=False)
 def get_upload():
     return render_template('upload.html')

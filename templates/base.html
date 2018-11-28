@@ -31,6 +31,16 @@
             <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
             <script src="{{ url_for('static', filename='js/fileinput.min.js') }}"></script>
         {% endblock %}
+
+    <script>
+     $('.nav-sidebar').find('a').each(function () {
+            if (this.href == document.location.href || document.location.href.search(this.href) >= 0) {
+                $(this).parent().addClass('active'); // this.className = 'active';
+            }
+        });
+    </script>
+
     </body>
 
 </html>
+

@@ -3,23 +3,20 @@
 {% block upload %}
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     <div class="row">
-        <div class="col-sm-6 placeholder" style="padding-top: 40px">
+        <div class="col-sm-6 placeholder" style="padding-top: 20px; padding-left: 30px">
+            <h2 style="font-size: 20px; padding-left: 10px; color: #428bca">Upload Image</h2>
+{#            <a class="detection_header">Upload Image</a>#}
             <form class="form-inline" role="form" action="/upload" method="post" enctype="multipart/form-data">
-                <span style="font-size: 20px; padding-left: 10px">Input</span>
                 <div class="form-group" style="padding-left: 10px">
-                    <input type="file" name="file">
+                    <input type="file" name="file" class="file">
                 </div>
-                <div class="form-group" style="padding-left: 10px">
-                    <button type="submit" class="btn btn-sm btn-success" style="padding-left: 10px">Upload</button>
-                </div>
+{#                <div class="form-group" style="padding-left: 10px">#}
+{#                    <button type="submit" class="btn btn-sm btn-success" style="padding-left: 10px">Upload</button>#}
+{#                </div>#}
             </form>
         </div>
-        <div class="col-sm-6 placeholder" style="padding-top: 40px">
-            <span style="font-size: 20px">Output</span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-6 placeholder" style="padding-top: 10px">
+        <div class="col-sm-6 placeholder" style="padding-top: 20px">
+            <h2 style="font-size: 20px; color: #428bca">Detection Result</h2>
             {% if filename %}
             <div id="original_img_div" style="position: relative;">
                 <img class="image-responsive img-thumbnail" src="{{ url_for('get_img_uploaded', filename=filename) }}" id="original_img" style="width: 100%;">
@@ -32,16 +29,7 @@
             <div class="text-muted"><label><input type="checkbox" id="toggle_bounding" name="toggle_bounding" checked> Toggle</label></div>
             {% endif %}
         </div>
-        <div class="col-sm-6 placeholder" style="padding-top: 10px">
-            {% if filename %}
-            <img class="image-responsive img-thumbnail" src="{{ url_for('get_img_predict', filename=filename) }}">
-            {% else %}
-            <img class="image-responsive img-thumbnail" src="{{ url_for('static', filename='image/input-holder.png') }}">
-            {% endif %}
-            <span class="text-muted">{{ output_text }}</span>
-        </div>
     </div>
-</div>
 <script>
 var output_json = {{ output_json | safe}};
 function toggle_bounding(){
