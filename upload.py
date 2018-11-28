@@ -127,6 +127,10 @@ def get_delete_all():
     os.system("rm -rf ./static/upload/*")
     return "OK"
 
+@app.errorhandler(500)
+def server_error(e):
+    return render_template('500.html'), 500
+
 def prepare_env():
     # Clean upload
     # os.system("rm -rf ./static/upload/*")
