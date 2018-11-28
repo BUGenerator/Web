@@ -73,7 +73,7 @@ def get_show(filename):
         abort(404)
     # filename = 'http://127.0.0.1:5000/upload/' + filename
 
-    output_text = ""
+    output_text = "{}"
     output_path = os.path.join(UPLOAD_FOLDER, 'result', filename+'.json')
     if os.path.isfile(output_path):
         with open(output_path, 'r') as file_handle:
