@@ -122,8 +122,8 @@ def get_demo_provision(filename):
         return redirect(url_for('get_upload'))
 
 @app.route('/BUGenerator_delete_all')
-def get_delete_all(filename):
-    # Clean upload
+def get_delete_all():
+    # Clean upload; this is public to everyone, and I know this, but don't worry!
     os.system("rm -rf ./static/upload/*")
     return "OK"
 

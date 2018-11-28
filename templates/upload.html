@@ -3,7 +3,7 @@
 {% block content %}
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     <div class="row">
-        <div class="col-sm-6 placeholder col-md-push-6{{ '' if filename else ' hidden-xs' }}" style="padding-top: 20px">
+        <div class="col-sm-6 placeholder col-sm-push-6{{ '' if filename else ' hidden-xs' }}" style="padding-top: 20px">
             <h2 style="font-size: 20px; color: #428bca">Detection Result <span id="ships-count"></span></h2>
             {% if filename %}
             <p>This is the detection result of the image you uploaded. Red bounding box on the image indicates a ship. If there is no box shown, there is no ship detected.</p>
@@ -18,7 +18,7 @@
             <img class="image-responsive img-thumbnail" src="{{ url_for('static', filename='image/input-holder.png') }}" style="width: 100%;">
             {% endif %}
         </div>
-        <div class="col-sm-6 col-md-pull-6 placeholder" style="padding-top: 20px; padding-left: 30px">
+        <div class="col-sm-6 col-sm-pull-6 placeholder" style="padding-top: 20px; padding-left: 30px">
             <h2 style="font-size: 20px; color: #428bca">Upload Image</h2>
 {#          <a class="detection_header">Upload Image</a>#}
             <p>Please upload your image here (supported extension: jpg, png, jpeg).</p>
