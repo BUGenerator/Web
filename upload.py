@@ -124,7 +124,8 @@ def get_demo_provision(filename):
 @app.route('/BUGenerator_delete_all')
 def get_delete_all():
     # Clean upload; this is public to everyone, and I know this, but don't worry!
-    os.system("rm -rf ./static/upload/*")
+    os.system("rm -f ./static/upload/*")
+    os.system("rm -f ./static/upload/result/*")
     return "OK"
 
 @app.errorhandler(500)
