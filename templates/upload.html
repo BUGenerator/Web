@@ -4,7 +4,7 @@
 <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
     <div class="row">
         <div class="col-sm-6 placeholder col-md-push-6{{ '' if filename else ' hidden-xs' }}" style="padding-top: 20px">
-            <h2 style="font-size: 20px; color: #428bca">Detection Result</h2>
+            <h2 style="font-size: 20px; color: #428bca">Detection Result <span id="ships-count"></span></h2>
             {% if filename %}
             <p>This is the detection result of the image you uploaded. Red bounding box on the image indicates a ship. If there is no box shown, there is no ship detected.</p>
             {% if output_json %}
@@ -56,6 +56,7 @@ function toggle_bounding(){
 }
 document.getElementById("toggle_bounding").addEventListener("click", toggle_bounding);
 toggle_bounding();
+document.getElementById('ships-count').innerHTML = '('+(output_json['regions'].length || 0)+' ships)';
 </script>
 <style>
 .bbox{border: 2px solid red; position: absolute;}
