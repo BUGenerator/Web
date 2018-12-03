@@ -34,7 +34,7 @@
     </div>
 </div>
 <script>
-var output_json = {{ output_json | safe}};
+var output_json = {{ output_json | default('{}') | safe }};
 function toggle_bounding(){
     var tb = document.getElementById("toggle_bounding"), oi = document.getElementById("original_img"), bboxes = document.getElementById("original_img_bboxes");
     if(output_json && output_json['regions'] && bboxes){

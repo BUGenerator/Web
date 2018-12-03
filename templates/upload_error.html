@@ -3,7 +3,7 @@
     <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" style="padding-left: 0px; padding-right: 0px">
         <div id="uploadAlert" class="alert alert-warning">
             <a href="#" class="close" data-dismiss="alert">&times;</a>
-            <strong>WARNING!</strong> There is NO FILE!
+            <strong>WARNING!</strong> {{ error | default('We cannot complete your request due to an error.') }}
         </div>
         <script>
         $(function(){

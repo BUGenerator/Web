@@ -45,7 +45,7 @@ def post_upload():
     try:
         file = request.files['file']
     except KeyError:
-        return render_template('upload_error.html')
+        return render_template('upload_error.html', error="It seems that you didn't select a file. Please try again.")
         # return jsonify({"error": 1001, "errmsg": u"failed"})
     if file and allowed_file(file.filename):
         # basepath = os.path.dirname(__file__)  # the path of current file
@@ -64,7 +64,7 @@ def post_upload():
 
         return redirect(url_for('get_show', filename=filename))
     else:
-        return render_template('upload_error.html')
+        return render_template('upload_error.html', error="We only supports files ending with these extensions:"+",".join(ALLOWED_EXTENSIONS))
 
 
 @app.route('/show/<filename>')
@@ -73,11 +73,11 @@ def get_show(filename):
         abort(404)
     # filename = 'http://127.0.0.1:5000/upload/' + filename
 
-    output_text = "{}"
+    output_text = ""
     output_path = os.path.join(UPLOAD_FOLDER, 'result', filename+'.json')
     if os.path.isfile(output_path):
         with open(output_path, 'r') as file_handle:
-            output_text = file_handle.read() or output_text
+            output_text = file_handle.read()
 
     return render_template('upload.html', filename=filename, output_text="", output_json=output_text)
 
