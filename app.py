@@ -77,7 +77,7 @@ def get_show(filename):
     output_path = os.path.join(UPLOAD_FOLDER, 'result', filename+'.json')
     if os.path.isfile(output_path):
         with open(output_path, 'r') as file_handle:
-            output_text = file_handle.read()
+            output_text = file_handle.read() or output_text
 
     return render_template('upload.html', filename=filename, output_text="", output_json=output_text)
 
