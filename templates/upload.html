@@ -55,9 +55,12 @@ function toggle_bounding(){
         bboxes.innerHTML = innerHTML;
     }
 }
-document.getElementById("toggle_bounding").addEventListener("click", toggle_bounding);
-toggle_bounding();
-document.getElementById('ships-count').innerHTML = '('+(output_json['regions'].length || 0)+' ships)';
+var tb = document.getElementById("toggle_bounding");
+if(tb){
+    tb.addEventListener("click", toggle_bounding);
+    toggle_bounding();
+}
+document.getElementById('ships-count').innerHTML = output_json ? ('('+(output_json['regions'].length || 0)+' ships)') : '';
 </script>
 <style>
 .bbox{border: 2px solid red; position: absolute;}
