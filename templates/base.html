@@ -14,10 +14,13 @@
     </head>
 
     <body>
-        {% include "common/header.html" %}
-        <div class="container-fluid">
+    <div class="background">
+    <div class="content">
+            <div class="container-fluid">
             <div class="row">
-                {% include "common/sidebar.html" %}
+            {% include "common/header.html" %}
+
+{#                {% include "common/sidebar.html" %}#}
                 {% block error %}
                 {% endblock %}
                 {% block content %}
@@ -31,9 +34,10 @@
             <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
             <script src="{{ url_for('static', filename='js/fileinput.min.js') }}"></script>
         {% endblock %}
-
+</div>
+    </div>
     <script>
-     $('.nav-sidebar').find('a').each(function () {
+     $('.navbar').find('a').each(function () {
             if (this.href == document.location.href || document.location.href.search(this.href) >= 0) {
                 $(this).parent().addClass('active'); // this.className = 'active';
             }

@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+<div class="col-sm-12 col-md-12" style="padding-top: 50px;">
     <div class="row">
         <div class="col-sm-6 placeholder col-sm-push-6{{ '' if filename else ' hidden-xs' }}" style="padding-top: 20px">
-            <h2 style="font-size: 20px; color: #428bca">Detection Result <span id="ships-count"></span></h2>
+            <h2 style="font-size: 24px; color: #fefefe">Detection Result <span id="ships-count"></span></h2>
             {% if filename %}
-            <p>This is the detection result of the image you uploaded. Red bounding box on the image indicates a ship. If there is no box shown, there is no ship detected.</p>
+            <p style="color: #fefefe">This is the detection result of the image you uploaded. Red bounding box on the image indicates a ship. If there is no box shown, there is no ship detected.</p>
             {% if output_json %}
             <div class="text-muted"><label><input type="checkbox" id="toggle_bounding" name="toggle_bounding" checked> Toggle results</label></div>
             {% endif %}
@@ -15,13 +15,13 @@
                 <div id="original_img_bboxes" style="margin: 4px;position: absolute;top: 0;bottom: 0;left: 0;right: 0;"></div>
             </div>
             {% else %}
-            <img class="image-responsive img-thumbnail" src="{{ url_for('static', filename='image/input-holder.png') }}" style="width: 100%;">
+            <img class="image-responsive img-thumbnail" src="{{ url_for('static', filename='image/input-holder.png') }}" style="width: 80%;">
             {% endif %}
         </div>
         <div class="col-sm-6 col-sm-pull-6 placeholder" style="padding-top: 20px; padding-left: 30px">
-            <h2 style="font-size: 20px; color: #428bca">Upload Image</h2>
+            <h2 style="font-size: 24px; color: #fefefe">Upload Image</h2>
 {#          <a class="detection_header">Upload Image</a>#}
-            <p>Please upload your image here (supported extension: jpg, png, jpeg).</p>
+            <p style="color: #fefefe">Please upload your image here (supported extension: jpg, png, jpeg).</p>
             <form class="form-inline" role="form" action="/upload" method="post" enctype="multipart/form-data">
                 <div class="form-group" style="padding-left: 10px">
                     <input type="file" name="file" class="file" accept="*.jpg, *.png, *.jpeg" data-allowed-file-extensions='["jpg", "png", "jpeg"]' required
@@ -55,9 +55,12 @@ function toggle_bounding(){
         bboxes.innerHTML = innerHTML;
     }
 }
-document.getElementById("toggle_bounding").addEventListener("click", toggle_bounding);
-toggle_bounding();
-document.getElementById('ships-count').innerHTML = '('+(output_json['regions'].length || 0)+' ships)';
+var tb = document.getElementById("toggle_bounding");
+if(tb){
+    tb.addEventListener("click", toggle_bounding);
+    toggle_bounding();
+}
+document.getElementById('ships-count').innerHTML = output_json ? ('('+(output_json['regions'].length || 0)+' ships)') : '';
 </script>
 <style>
 .bbox{border: 2px solid red; position: absolute;}
