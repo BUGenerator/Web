@@ -4,6 +4,7 @@ from keras.preprocessing.image import load_img
 from PIL import Image
 from skimage.morphology import binary_opening, disk, label
 from skimage.measure import regionprops
+from skimage.segmentation import find_boundaries
 import os
 
 fullres_model = None
@@ -51,7 +52,11 @@ def save_by_path(seg, path):
 def extract_seg(seg):
     labels = label(seg)
     regions_original = regionprops(labels)
-    regions = [region.bbox for region in regions_original if region.area > 100]
+    regions = list()
+    for region in regions_original:
+        if region.area > 100:
+            regions.append(list(region.bbox) + [find_boundaries(region.image, mode='thick').astype(np.uint8).flatten()])
+
     # bbox: (min_row, min_col, max_row, max_col)
 
     return {'regions': regions, 'size': MODEL_IMG_SIZE}
