@@ -36,11 +36,11 @@
 </div>
 <script>
 var output_json = {{ output_json | default('{}') | safe }};
-function toggle_bounding(){
+function init_bounding(){
     var tb = document.getElementById("toggle_bounding"), oi = document.getElementById("original_img"), bboxes = document.getElementById("original_img_bboxes");
     if(output_json && output_json['regions'] && bboxes){
         var size = output_json['size'];
-        var innerHTML = "";
+        // var innerHTML = "";
         if(tb && tb.checked){
             for(var i in output_json['regions']){
                 var region = output_json['regions'][i];
@@ -49,10 +49,45 @@ function toggle_bounding(){
                 height = Math.round(height*100000)/1000;
                 left = Math.round(left*100000)/1000;
                 width = Math.round(width*100000)/1000;
-                innerHTML += '<div class="bbox" style="top: '+top+'%;left: '+left+'%;height: '+height+'%;width: '+width+'%;"></div>';
+                var bbox = document.createElement("div");
+                bbox.className = "bbox";
+                bbox.style.top = top+"%";
+                bbox.style.left = left+"%";
+                bbox.style.height = height+"%";
+                bbox.style.width = width+"%";
+                if(region[4] && region[4].length){
+                    var canvas = document.createElement('canvas');
+                    var ctx = canvas.getContext && canvas.getContext('2d');
+                    if(ctx){
+                        canvas.width = region[3]-region[1];
+                        canvas.height = region[2]-region[0];
+
+                        var image = ctx.createImageData(region[3]-region[1], region[2]-region[0]);
+                        for(var img_i in region[4]){
+                            image[img_i*4+2] = 255;
+                            image[img_i*4+3] = region[4][img_i]*255;
+                        }
+                        ctx.putImageData(image, 0, 0);
+                        bbox.appendChild(canvas);
+                    }
+                }
+
+                bboxes.appendChild(bbox);
+                // innerHTML += '<div class="bbox" style="top: '+top+'%;left: '+left+'%;height: '+height+'%;width: '+width+'%;"><img src=""></div>';
             }
         }
-        bboxes.innerHTML = innerHTML;
+        // bboxes.innerHTML = innerHTML;
+    }
+}
+init_bounding();
+function toggle_bounding(){
+    var tb = document.getElementById("toggle_bounding"), oi = document.getElementById("original_img"), bboxes = document.getElementById("original_img_bboxes");
+    if(bboxes){
+        if(tb && tb.checked){
+            bboxes.style.display = 'block';
+        }else{
+            bboxes.style.display = 'none';
+        }
     }
 }
 var tb = document.getElementById("toggle_bounding");
@@ -64,6 +99,8 @@ document.getElementById('ships-count').innerHTML = output_json ? ('('+(output_js
 </script>
 <style>
 .bbox{border: 2px solid red; position: absolute;}
-.bbox:hover{border-color: blue;}
+.bbox canvas{display: none;}
+.bbox:hover{border: none;}
+.bbox:hover canvas{display: block; width: 100%; height:100%;}
 </style>
 {% endblock %}
