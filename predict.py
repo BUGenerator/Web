@@ -6,6 +6,8 @@ from skimage.morphology import binary_opening, disk, label
 from skimage.measure import regionprops
 from skimage.segmentation import find_boundaries
 import os
+from io import BytesIO
+import base64
 
 fullres_model = None
 MODEL_IMG_SIZE = (768, 768)
@@ -55,7 +57,16 @@ def extract_seg(seg):
     regions = list()
     for region in regions_original:
         if region.area > 100:
-            regions.append(list(region.bbox) + [find_boundaries(region.image, mode='thick').astype(np.uint8).flatten().tolist()])
+            boundary = find_boundaries(region.image, mode='thick').astype(np.uint8)
+            rgba = np.zeros((boundary.shape[0],boundary.shape[1],4), 'uint8')
+            rgba[..., 2] = 255
+            rgba[..., 3] = boundary*255
+            img = Image.fromarray(rgba)
+            output_buffer = BytesIO()
+            img.save(output_buffer, format='png')
+            byte_data = output_buffer.getvalue()
+            base64_str = "data:image/png;base64,"+base64.b64encode(byte_data)
+            regions.append(list(region.bbox) + [base64_str])
 
     # bbox: (min_row, min_col, max_row, max_col)
 

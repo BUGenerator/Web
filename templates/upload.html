@@ -55,21 +55,10 @@ function init_bounding(){
                 bbox.style.left = left+"%";
                 bbox.style.height = height+"%";
                 bbox.style.width = width+"%";
-                if(region[4] && region[4].length){
-                    var canvas = document.createElement('canvas');
-                    var ctx = canvas.getContext && canvas.getContext('2d');
-                    if(ctx){
-                        canvas.width = region[3]-region[1];
-                        canvas.height = region[2]-region[0];
-
-                        var image = ctx.createImageData(region[3]-region[1], region[2]-region[0]);
-                        for(var img_i in region[4]){
-                            image[img_i*4+2] = 255;
-                            image[img_i*4+3] = region[4][img_i]*255;
-                        }
-                        ctx.putImageData(image, 0, 0);
-                        bbox.appendChild(canvas);
-                    }
+                if(region[4]){
+                    var canvas = document.createElement('img');
+                    canvas.src = region[4];
+                    bbox.appendChild(canvas);
                 }
 
                 bboxes.appendChild(bbox);
@@ -99,8 +88,8 @@ document.getElementById('ships-count').innerHTML = output_json ? ('('+(output_js
 </script>
 <style>
 .bbox{border: 2px solid red; position: absolute;}
-.bbox canvas{display: none;}
+.bbox canvas, .bbox img{display: none; width: 100%; height:100%;}
 .bbox:hover{border: none;}
-.bbox:hover canvas{display: block; width: 100%; height:100%;}
+.bbox:hover canvas, .bbox:hover img{display: block;}
 </style>
 {% endblock %}
