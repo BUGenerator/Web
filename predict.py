@@ -55,7 +55,7 @@ def extract_seg(seg):
     regions = list()
     for region in regions_original:
         if region.area > 100:
-            regions.append(list(region.bbox) + [list(find_boundaries(region.image, mode='thick').astype(np.uint8).flatten())])
+            regions.append(list(region.bbox) + [find_boundaries(region.image, mode='thick').astype(np.uint8).flatten().tolist()])
 
     # bbox: (min_row, min_col, max_row, max_col)
 
