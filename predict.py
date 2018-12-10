@@ -65,7 +65,7 @@ def extract_seg(seg):
             output_buffer = BytesIO()
             img.save(output_buffer, format='png')
             byte_data = output_buffer.getvalue()
-            base64_str = "data:image/png;base64,"+base64.b64encode(byte_data)
+            base64_str = "data:image/png;base64,"+base64.b64encode(byte_data).decode('utf-8')
             regions.append(list(region.bbox) + [base64_str])
 
     # bbox: (min_row, min_col, max_row, max_col)

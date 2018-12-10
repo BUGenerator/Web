@@ -79,6 +79,9 @@ def get_show(filename):
         with open(output_path, 'r') as file_handle:
             output_text = file_handle.read()
 
+    if not output_text:
+        output_text = "{}"
+
     return render_template('upload.html', filename=filename, output_text="", output_json=output_text)
 
 
@@ -124,8 +127,8 @@ def get_demo_provision(filename):
 @app.route('/BUGenerator_delete_all')
 def get_delete_all():
     # Clean upload; this is public to everyone, and I know this, but don't worry!
-    os.system("rm -f ./static/upload/*")
     os.system("rm -f ./static/upload/result/*")
+    os.system("rm -f ./static/upload/*")
     return "OK"
 
 @app.errorhandler(500)
