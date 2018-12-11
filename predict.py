@@ -59,7 +59,7 @@ def extract_seg(seg):
         if region.area > 100:
             boundary = find_boundaries(region.image, mode='thick').astype(np.uint8)
             rgba = np.zeros((boundary.shape[0],boundary.shape[1],4), 'uint8')
-            rgba[..., 2] = 255
+            rgba[..., 0] = 255
             rgba[..., 3] = boundary*255
             img = Image.fromarray(rgba)
             output_buffer = BytesIO()
