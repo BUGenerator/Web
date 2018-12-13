@@ -8,16 +8,56 @@
 
 <div class="content col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2" style="padding-top: 50px;">
     <h2 style="font-size: 20px; color: #6b92d6">About the model</h2>
-    <p>Since you are on this page, we will introduce the model we use for now.</p>
-    <p>We compared several models and chose U-Net model for now. U-Net is highly suitable for binary segmentation of images, which exactly matches our task: binary segmentation for whether pixels include a ship.</p>
+    <p>In this problem, we chose a popular model on Kaggle: U-Net. Specifically, we refer to the one in https://www.kaggle.com/hmendonca/u-net-model-with-submission (with a license of Apache 2.0).
+
+    <p>For the implementation, we use Keras with TensorFlow backend. We intended to change it to TensorFlow’s native Keras API, but due to a bug in its implementation we are unable to reuse the model saved by TensorFlow, we kept back to Keras. It can be run with both CPU and GPU, thanks to Keras.
+
+    <p>U-Net Model is a model classifying binary category, which is very useful in our case. It is introduced to do biomedical purpose image segmentations. People usually regard the process as encoding and decoding, in which information is getting concentrated first, and later diluted.
+
+    <p>This U-Net has 38 layers in total (491,143 trainable paramaters), which consists of:
     <ul>
-        <li>Training set includes 231,724 satellite images.
-            <ul>
-                <li>For images in the training set, the ground truth EncodedPixels are provided in the train_ship_segmentations.csv file.</li>
-                <li>EncodedPixels is blank if there are no ships in the image.</li>
-            </ul>
+        <li>Preprocessing: AvgPool2D, GaussianNoise, BatchNormalization</li>
+        <li>Conv2D + MaxPooling (4 stages repeated)</li>
+        <li>Conv2D</li>
+        <li>Conv2D + UpSample (4 stages repeated)</li>
     </ul>
-    <p>Validation loss (Intersection over Union): -0.25026</p>
-    <p></p>
+
+    <p>Input vector shape is (256, 256, 3), i.e. 256*256 pixels with RGB channels. Output vector shape is (256, 256, 1), i.e. 256*256 pixels with 0-1 binary prediction results.
+
+    <p>In terms of loss functions, we use Intersection Over Union functions. This is what this Kaggle challenge use to evaluate the model, which involves expected (actual) ship pixel’s position and the predicted ship pixel’s position. If the two coincides more, the number will be more to 1, or the number will be more to 0.
+
+    <p>Since this loss function is “the larger is better” (not the same as usual trend - the smaller is better), in practice we define this as a negative number, so that Keras can train the model with the loss function going down to reflect a better model performance.
+
+    <p>For metrics, usually people would use “binary accuracy”, by comparing each pixel’s result to get an accuracy percentage. However, since sea in the image has over 90%’s area, this metric will easily get high. As you can see in the chart below (this is one of our model’s performance during training), the Binary Accuracy is very close to 99%. However this cannot correctly reflect the actual performance of the model.
+
+    <p>So we introduced two metrics to help us check the performance of the model.
+
+    <ul>
+        <li>Per-image Accuracy: For each image, compare ships count from prediction and the actual tag, and then see how many percentage of images the model has detected a correct ship count. This is usually how people will judge the model intuitively.</li>
+        <li>Zero-ship Count: Image count that is predicted with no ships, as well as the actual count of images without any ships. This can help us see whether the model has a tendency of detecting everything as non-ship pixels (sometimes the model training will go into a direction where “no ship is more effective than trying to detect a ship”).</li>
+    </ul>
+
+    <p>We have attempted training on ENG Grid and SCC resources, which is very powerful to complete datasets of thousands to full-amount images. All the source code can be found on our GItHub (which is mostly version-controlled), while the final model is in its “releases”.
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Model name</th>
+                <th>Image Count</th>
+                <th>perImage Accuracy</th>
+                <th>Actual zero-ship images</th>
+                <th>Predicted zero-ship images</th>
+                <th>binary accuracy</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>v1.0 - first 10000 images</td><td>7734</td><td>34.79%</td><td>1755</td><td>2202</td><td>44.17%</td></tr>
+            <tr><td>v1.1 - first 10000 images*</td><td>7734</td><td>39.50%</td><td>1755</td><td>1589</td><td>98.96%</td></tr>
+            <tr><td>v1.2 - first 10000 images</td><td>7734</td><td>23.32%</td><td>1755</td><td>1710</td><td>98.98%</td></tr>
+            <tr><td>v1.3 - full load</td><td>7734</td><td>34.33%</td><td>1755</td><td>0</td><td>64.13%</td></tr>
+            <tr><td>v1.4 - full load no zero ships</td><td>7734</td><td>35.05%</td><td>1755</td><td>0</td><td>25.89%</td></tr>
+        </tbody>
+    </table>
+    <p>* Currently online</p>
 </div>
 {% endblock %}
